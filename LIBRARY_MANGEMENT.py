@@ -60,14 +60,18 @@ def input_slow_writing(text: str,text_style = "white", speed = 0.025):
     return input()
 
 def loading(text: str):
-    x = randint(2, 6)
-    for x in range(1, x):
+    r = randint(2, 4)
+    for x in range(1, r):
         for i in ("⠻", "⠽", "⠾", "⠷", "⠯", "⠟"):
             time.sleep(0.1)
-            if x == 21:
+            if x == r:
                 break
             else:
-                print(text +i, end = '\r')
+                print(text + i, end = '\r')
+    
+def loading_wrapper(enable, loading_text: str = ""): 
+    if enable == True:
+        loading(loading_text)
 
 ################################################
 
@@ -139,23 +143,25 @@ def search_book():
        
         else:
             search_id = input_slow_writing("what is the id of the book?\n---> ")
-            loading("\nSearch ")
+            loading_wrapper(True, "Search ")
+            loading_wrapper(False)
             for line in books:
-                if search_id in line:
+                if search_id in line and len(search_id) + 6 == len(line):
                     line_index = books.index(line)
-                    print("\n",
-                        line, books[line_index + 1],
+                    print(line,
+                        books[line_index + 1],
                         books[line_index + 2],
                         books[line_index + 3],
                         books[line_index + 4])
                     break
-                else:
-                    slow_writing("this book isn't exist !", style="bold white", speed=0)
-                    break
+            else:
+                slow_writing("this book isn't exist !", text_style="bold white", speed=0)
+
+
     # optionnel options
         while True:
-            choice = input_slow_writing("""    1- search on another book?
-    2- Back to main?\n---> """, text_style="bold white",speed=0)
+            choice = input_slow_writing("""1- search on another book?
+2- Back to main?\n---> """, text_style="bold white",speed=0)
             if choice in ["1", "2"]:
                  break
             else:
@@ -164,11 +170,10 @@ def search_book():
         if choice == "1":
             search_book()
         else:
-            back_to_main()
+            main()
 
 # add functions
 def add_conditions():
-
     while True:
         book_id = input_slow_writing("id: ", text_style="bold white")
         if book_id.isdigit():
@@ -219,7 +224,7 @@ def add_book():
     # confiramtion
     while True:
         confirmation = input_slow_writing("are you shure to add this book?\n---> ", text_style="bold white", speed=0)
-        if confirmation in ["y", "yes", "confirm", "n", "no"]:
+        if confirmation in agreement_options:
             break
         else:
             slow_writing("invalid key !!", text_style="bold underline white", speed=0)
