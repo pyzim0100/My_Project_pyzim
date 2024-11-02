@@ -10,10 +10,21 @@ file_path = "books.txt"
 agreement_options = ["y", "yes", "n", "no"]
 
 ################################################
-
-# the Aesthetics
+# designs
 
 console = Console()
+
+def slow_writing(text: str,text_style = "white", speed = 0.025):
+    for char in text:
+        console.print(char, end="", style= text_style)
+        time.sleep(speed)
+    print()
+
+def input_slow_writing(text: str,text_style = "white", speed = 0.025):
+    for char in text:
+        console.print(char, end="", style=text_style)
+        time.sleep(speed)
+    return input()
 
 def back_to_main():
     while True:
@@ -21,10 +32,10 @@ def back_to_main():
         if ask in agreement_options:
             break
         else:
-            slow_writing("invalid key !!", style="underline bold", speed=0)
+            slow_writing("invalid key !!", text_style="underline bold", speed=0)
             continue
     if ask == "y" or ask =="yes":
-        os.system("cls")
+        os.system("cls" if os.name == "nt" else "clear")
         main()
     else:
         time.sleep(2)
@@ -47,18 +58,6 @@ def make_library():
     else:
         back_to_main()
 
-def slow_writing(text: str,text_style = "white", speed = 0.025):
-    for char in text:
-        console.print(char, end="", style= text_style)
-        time.sleep(speed)
-    print()
-
-def input_slow_writing(text: str,text_style = "white", speed = 0.025):
-    for char in text:
-        console.print(char, end="", style=text_style)
-        time.sleep(speed)
-    return input()
-
 def loading(text: str):
     r = randint(2, 4)
     for x in range(1, r):
@@ -68,14 +67,14 @@ def loading(text: str):
                 break
             else:
                 print(text + i, end = '\r')
-    
+ 
 def loading_wrapper(enable, loading_text: str = ""): 
     if enable == True:
         loading(loading_text)
 
 ################################################
-
 # decorators
+
 def check_file(func):
     def wrapper():
         if os.path.exists(file_path):
@@ -115,7 +114,7 @@ def view_library():
 
         else:
             for book in lines:
-                console.print(book, end="")
+                slow_writing(book,end="")
             back_to_main()
 
 # check function
@@ -191,7 +190,7 @@ def add_conditions():
 
     while True:
         name = input_slow_writing("name: ", text_style="bold white")
-        if name.isalpha():
+        if all(char.isalpha() or char.isspace() for char in name):
             break
         else:
             slow_writing("invalid value! letters only!\n", text_style="bold underline white", speed=0)
@@ -199,7 +198,7 @@ def add_conditions():
     
     while True:
         author = input_slow_writing("author: ", text_style="bold white")
-        if author.isalpha():
+        if all(char.isalpha() or char.isspace() for char in author):
             break
         else:
             slow_writing("invalid value! letters only!\n", text_style="bold underline white", speed=0)
@@ -235,8 +234,8 @@ def add_book():
                 file.write(f"BOOk {conditions[0]}\nname: {conditions[1]}\nauthor: {conditions[2]}\npages: {conditions[3]}\n---------------------\n")
         slow_writing("the book was added succesfully !!", text_style="bold white italic")
         while True:
-            choice = input_slow_writing("""     1- Add another book?
-    2- Back to main?\n--> """, text_style="bold white")
+            choice = input_slow_writing("""1- Add another book?
+2- Back to main?\n--> """, text_style="bold white")
             if choice in ["1", "2"]:
                 break
             else:
@@ -278,23 +277,24 @@ def delete_book():
                 lines.remove(lines[line_index])
                 lines.remove(lines[line_index])
                 lines.remove(lines[line_index])
+                slow_writing("the Book was deleted successefully !", text_style="bold white italic")
                 break
-            else:
-                slow_writing("this book isn't exist !", text_style="bold white", speed=0)
-                break
+        else:
+            slow_writing("this book isn't exist !", text_style="bold white", speed=0)
+            
     with open("books.txt", "w") as file:
         for line in lines:
             file.write(line)
+
     # optionnel options
     while True:
-        choice = input_slow_writing("""    1- delete another book?
-    2- Back to main?\n---> """, text_style="bold white")
+        choice = input_slow_writing("""1- delete another book?
+2- Back to main?\n---> """, text_style="bold white")
         if choice in ["1", "2"]:
                 break
         else:
             slow_writing("invalid key !!", text_style="bold underline white", speed=0)
             continue
-
     if choice == "1":
         delete_book()
     else:
