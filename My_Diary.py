@@ -314,7 +314,7 @@ def Delete_Page():
         # Delete File Data
         with open('Pages_Data.csv', "r") as csv_file:
             csv_reader = csv.reader(csv_file)
-            rows_to_keep = [['Page_Name','Page_Title','Page_Date','Page_First_line']]
+            rows_to_keep = []
             for row in csv_reader:
                 if Page_Name != row[0]:
                     rows_to_keep.append(row)
