@@ -15,12 +15,13 @@ agreement_options = ["y", "yes", "n", "no"]
 console = Console()
 
 def slow_writing(text: str,text_style = "white", speed = 0.025):
+    print()
     for char in text:
         console.print(char, end="", style= text_style)
         time.sleep(speed)
-    print()
 
 def input_slow_writing(text: str,text_style = "white", speed = 0.025):
+    print()
     for char in text:
         console.print(char, end="", style=text_style)
         time.sleep(speed)
@@ -28,7 +29,7 @@ def input_slow_writing(text: str,text_style = "white", speed = 0.025):
 
 def back_to_main():
     while True:
-        ask = input_slow_writing("\nback to main menu?(y/n)\n--->")
+        ask = input_slow_writing("back to main menu?(y/n)\n--->")
         if ask in agreement_options:
             break
         else:
@@ -42,7 +43,7 @@ def back_to_main():
         back_to_main()
 
 def make_library():
-    slow_writing("!! The Library isn't exist !!\n", text_style="underline bold white", speed=0)
+    slow_writing("!! The Library isn't exist !!", text_style="underline bold white", speed=0)
     while True:
         make_library = input_slow_writing("do you want to make one?\n---> ")
         if make_library in agreement_options:
@@ -98,10 +99,10 @@ def view_library():
     with open(file_path, "r") as file:
         lines = file.readlines()
         if lines == []:
-            slow_writing("The Library is Empty >_<", style="bold white")
+            slow_writing("The Library is Empty >_<", text_style="bold white")
             time.sleep(1)
             while True:
-                add = input_slow_writing("\nDo you want to add some books")
+                add = input_slow_writing("Do you want to add some books\n--->")
                 if add in agreement_options:
                     break
                 else:
@@ -114,7 +115,7 @@ def view_library():
 
         else:
             for book in lines:
-                slow_writing(book,end="")
+                slow_writing(book)
             back_to_main()
 
 # check function
@@ -129,7 +130,7 @@ def search_book():
             time.sleep(1)
     # optionnel choices
             while True:
-                add = input_slow_writing("\nDo you want to add some books\n--->")
+                add = input_slow_writing("Do you want to add some books\n--->")
                 if add in agreement_options:
                     break
                 else:
@@ -174,42 +175,46 @@ def search_book():
 # add functions
 def add_conditions():
     while True:
-        book_id = input_slow_writing("id: ", text_style="bold white")
+        book_id = console.input("[b]id: ")
         if book_id.isdigit():
             break
         else:
-            slow_writing("invalid value! numbers only!\n", text_style="bold underline white", speed=0)
+            slow_writing("invalid value! numbers only!", text_style="bold underline white", speed=0)
             continue
     with open(file_path) as file:
         for line in file.readlines():
             if book_id in line:
-                slow_writing("this id is already existing !\n", text_style="bold white", speed=0)
+                slow_writing("this id is already existing !", text_style="bold white", speed=0)
                 back_to_main()
             else:
                 break
 
     while True:
-        name = input_slow_writing("name: ", text_style="bold white")
-        if all(char.isalpha() or char.isspace() for char in name):
+        name = console.input("[b]name: ")
+        if all(char.isalpha() and char.isspace() for char in name):
+            break
+        elif all(char.isalpha() for char in name):
             break
         else:
-            slow_writing("invalid value! letters only!\n", text_style="bold underline white", speed=0)
+            slow_writing("invalid value! letters only!", text_style="bold underline white", speed=0)
             continue
     
     while True:
-        author = input_slow_writing("author: ", text_style="bold white")
-        if all(char.isalpha() or char.isspace() for char in author):
+        author = console.input("[b]author: ")
+        if all(char.isalpha() and char.isspace() for char in author):
+            break
+        elif all(char.isalpha() for char in author):
             break
         else:
-            slow_writing("invalid value! letters only!\n", text_style="bold underline white", speed=0)
+            slow_writing("invalid value! letters only!", text_style="bold underline white", speed=0)
             continue
 
     while True:
-        pages = input_slow_writing("pages: ", text_style="bold white")
+        pages = console.input("[b]pages: ")
         if pages.isdigit():
             break
         else:
-            slow_writing("invalid value! numbers only!\n", text_style="bold underline white", speed=0)
+            slow_writing("invalid value! numbers only!", text_style="bold underline white", speed=0)
             continue
 
     return book_id, name, author, pages
@@ -249,8 +254,8 @@ def add_book():
     # optionnel options
     else:
         while True:
-            choice = input_slow_writing("""   1- Add a book?
-    2- Back to main?\n---> """, text_style="bold white")
+            choice = input_slow_writing("""1- Add a book?
+2- Back to main?\n---> """, text_style="bold white")
             if choice in ["1", "2"]:
                 break
             else:
@@ -277,7 +282,7 @@ def delete_book():
                 lines.remove(lines[line_index])
                 lines.remove(lines[line_index])
                 lines.remove(lines[line_index])
-                slow_writing("the Book was deleted successefully !", text_style="bold white italic")
+                slow_writing("the Book was deleted successefully !\n", text_style="bold white italic")
                 break
         else:
             slow_writing("this book isn't exist !", text_style="bold white", speed=0)
@@ -311,7 +316,7 @@ def main():
     4- delete books
     5- quit""", style="bold")
     while True:
-        user_option = input_slow_writing("\nwhat is your option?(by numbers)\n---> ")
+        user_option = input_slow_writing("what is your option?(by numbers)\n---> ")
         if user_option in ["1", "2", "3", "4", "5"]:
             break
         else:
