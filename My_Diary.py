@@ -24,6 +24,12 @@ Style_Themes = {
 def Print(msg, msg_style= Style_Themes["Regular"]):
     console.print(msg, style= msg_style)
 
+def slow_writing(text: str,text_style = "white", speed = 0.025):
+    for char in text:
+        console.print(char, end="", style= text_style)
+        sleep(speed)
+    print()
+
 ##### Sub Func #####
 
 def Make_Diary():
@@ -165,7 +171,10 @@ def Page_Edit(Page_name):
     with open(f"{Diary_Info()[0]}/{Page_name}", "w") as Edited_Page:
         for line in New_Lines:
             Edited_Page.write(f"{line}\n")
-    Back_To_Main()
+    Options_After_Func(["Read The Page", "Search Another Page?", "Back To Main?"],
+                       lambda: Read_Page(Diary_Info()[0], Page_name),
+                       lambda: Search_Page(),
+                       lambda: main())
 
 def Read_Page(Diary_name, Page_name):
     clear()
@@ -173,7 +182,10 @@ def Read_Page(Diary_name, Page_name):
         Page_Lines = Page.readlines()
     Panel_Content = "".join(Page_Lines)
     Print(Panel(Panel_Content, title=f'[b]{Page_name}', style=Style_Themes["Regular"]))
-    Back_To_Main()
+    Options_After_Func(["Edit The Page?", "Search Another Page", "Back To Main?"],
+                       lambda: Page_Edit(Page_name),
+                       lambda: Search_Page(),
+                       lambda: main())
 
 def Options_After_Func(options, *responses):
     num = []
@@ -229,7 +241,7 @@ def Check_Pages(func):
 
 @Check_Pages
 def View_Dairy():
-    console.print(Panel(figlet_format("View Diary.", font='roman', width=120, justify='center'), expand=False, box=box.ASCII2))
+    Print(Panel(figlet_format("View Diary.", font='roman', width=120, justify='center'), expand=False, style=Style_Themes["Regular"], box=box.ASCII2))
     Print(Panel(f"[u]Diary Name[/u]: {Diary_Info()[0]} {"-"*60} [u]Total Pages[/u]: {Diary_Info()[1]}", width=100, style=Style_Themes["Regular"]))
     for page in os.listdir(Diary_Info()[0]):
         with open('Pages_Data.csv') as Page:
@@ -244,7 +256,7 @@ def View_Dairy():
 
 @Check_Pages
 def Search_Page():
-    console.print(Panel(figlet_format("Search Page.", font='roman', width=120, justify='center'), expand=False, box=box.ASCII2))
+    Print(Panel(figlet_format("Search Page.", font='roman', width=120, justify='center'), expand=False, style=Style_Themes["Regular"], box=box.ASCII2))
     Page_Name = console.input("[b]Name Of Page: ")
     Diary_name = Diary_Info()[0]
     for name in os.listdir(Diary_name):
@@ -305,7 +317,7 @@ def Add_Page():
     
 @Check_Pages
 def Delete_Page():
-    console.print(Panel(figlet_format("Delete Page.", font='roman', width=120, justify='center'), expand=False, box=box.ASCII2))
+    Print(Panel(figlet_format("Delete Page.", font='roman', width=120, justify='center'), expand=False, style=Style_Themes["Regular"], box=box.ASCII2))
     Page_Name = console.input("[b]Enter Page Name: ").strip()
     Diary_Name = Diary_Info()[0]
     if os.path.exists(f"{Diary_Name}/{Page_Name}"):
@@ -328,7 +340,22 @@ def Delete_Page():
                            lambda: main())
     else:
         Print(Panel("The Page Isn't Exist", expand=False, style=Style_Themes["Warning"]))
-        Back_To_Main()
+        Options_After_Func(["Delete Another Page?", "Back To Main?"],
+        lambda: Delete_Page(),
+        lambda: main())
+
+def How_To_MyDiary():
+    clear()
+    Print(Panel(figlet_format("How To Diary.", font='roman', width=130, justify='center'), expand=False, style=Style_Themes["Regular"], box=box.ASCII2))
+    slow_writing("Hello And Welcome To MY DIARY Programm", text_style='bold', speed=0.05)
+    slow_writing("Here You Are Free To Write What Ever You Want", text_style='bold', speed=0.05)
+    slow_writing("So Open Your Mind ANd Let You Imagination Free !!", text_style='italic bold green', speed=0.075)
+    slow_writing("""Some Writing Notice:
+1- You Can't Change The Name Of Page After When You Write it.. SO BE careful
+2- You Can Exit The Text_Edit Section With 'end' In The End Of Your Text
+3- You Can Let The Line Empty And He's Automatically Take The Previous Line Like A New Line To Speed Up Your Text_Editing
+4- You Can Write 'BACK' Like a Page_Name in Add_Page Section And He Is Takes You To Main Menu(For By Mistakes Options)""", text_style='red blink', speed=0.05)
+    Back_To_Main()
 
 ##### Main #####
 def main():
@@ -338,17 +365,18 @@ def main():
             "2- Search On Day",
             "3- Add New Page",
             "4- Delete Page",
-            "5- Quit"):
+            "5- How To My_Diary",
+            "6- Quit"):
         Panel(line, expand=False)
         Print(Panel(line, expand=False, box= box.SQUARE, style=Style_Themes["Regular"], highlight=True))
     while True:
         u_option = console.input("[b][b]Enter Your Option: ").strip()
-        if u_option in [str(num) for num in range(1, 6)]:
+        if u_option in [str(num) for num in range(1, 7)]:
             break
         else:
             Print(Panel("Invalid Option !", expand=False, style=Style_Themes["Warning"]))
     
-    if u_option == "5":
+    if u_option == "6":
         quit()
     if u_option == "1":
         View_Dairy()
@@ -356,8 +384,10 @@ def main():
         Search_Page()
     elif u_option == "3":
         Add_Page()
-    else:
+    elif u_option == "4":
         Delete_Page()
+    else:
+        How_To_MyDiary()
 
 if __name__ == "__main__":
     main()
