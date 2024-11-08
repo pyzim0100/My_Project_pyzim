@@ -11,6 +11,7 @@ from rich.style import Style
 from rich.prompt import Prompt
 from pyfiglet import figlet_format
 from rich import box
+import string
 
 clear = lambda : os.system("cls" if os.name == "nt" else "clear")
 console = Console()
@@ -79,7 +80,13 @@ def Back_To_Main():
 def Text_Write(Page_name):
     clear()
     console.rule(Page_name, style="white bold")
-    Title = console.input("[b]Title: ").strip('')
+    while True:
+        Title = console.input("[b]Title: ").strip()
+        if Title == "" or Title in string.punctuation:
+            Print("Invalid Title !!", msg_style=Style_Themes["Warning"])
+            continue
+        else:
+            break
     lines = [f"Title: {Title}",
              f"Date: {datetime.now().strftime(f'%d/%m/%Y')}",
              ""]
@@ -285,11 +292,11 @@ def Add_Page():
         Page_name = console.input("[b]Enter Page Name: ").strip()
         if Page_name == "BACK":
             main()
-        if all(char.isalnum() or char.isspace() for char in Page_name):
-            break
-        else:
-            Print(Panel("Invalid Key !!", style=Style_Themes["Warning"], expand=False))
+        if Page_name == "" or Page_name in string.punctuation:
+            Print("Invalid Name !!", msg_style=Style_Themes["Warning"])
             continue
+        else:
+            break
     for name in os.listdir(diary_info[0]):
         if Page_name in name and len(Page_name) == len(name):
             Print(Panel("The Page Is already Exist", expand=False, style=Style_Themes['Warning']))
